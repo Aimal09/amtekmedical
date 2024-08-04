@@ -1,0 +1,18 @@
+body{
+    background-color: var(--background);
+}
+
+.login{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+.loginform{
+    width: 400px;
+    max-width: 100%;
+    padding: 40px 20px;
+    border-radius: 20px;
+    background-color: var(--foreground);
+    box-shadow: -10px 10px 60px -30px var(--sr-text);
+}

@@ -1,0 +1,49 @@
+h3,
+h4,
+label {
+    text-transform: capitalize;
+}
+
+div:has(>input[type=checkbox]) {
+    display: flex;
+    align-items: center;
+}
+
+.patientform input[type=checkbox] {
+    order: -1;
+    margin-right: 5px;
+    margin-bottom: 8px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: solid 1px var(--sr-text);
+    outline-color: var(--primary);
+    box-sizing: border-box;
+}
+
+@media (max-width: 992px) {
+
+    .dashboard-container {
+        grid-template-areas: "nav nav"
+            "cont cont"
+            "cont cont" !important;
+    }
+
+    aside {
+        grid-area: cont !important;
+        z-index: 1 !important;
+        background: var(--foreground);
+        max-width: 300px;
+        left: -300px;
+        transition: all 300ms;
+    }
+    aside:has(.togglebutn.open){
+        left: 0;
+    }
+    aside .togglebutn{
+        z-index: 3 !important;
+    }
+}

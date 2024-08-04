@@ -1,0 +1,17 @@
+.input-with-label {
+    margin-bottom: 15px;
+}
+
+.input-with-label label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-with-label input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: solid 1px var(--sr-text);
+    outline-color: var(--primary);
+    box-sizing: border-box;
+}

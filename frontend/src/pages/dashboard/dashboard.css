@@ -1,0 +1,60 @@
+aside{
+    grid-area: aside;
+    padding: 15px;
+    position: relative;
+}
+nav{
+    grid-area: nav;
+    box-shadow: 0 10px 20px -10px var(--background);
+    padding: 15px;
+}
+.content{
+    grid-area: cont;
+    background-color: var(--background);
+    padding: 30px;
+    border-radius: 30px;
+    overflow: auto;
+}
+.dashboard-container{
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 80px 1fr 50px;
+    grid-template-areas: "nav nav"
+                        "aside cont"
+                        "aside cont";
+    background-color: var(--foreground);
+    width: 100vw;
+    height: 100vh;
+}
+aside ul{
+    list-style: none;
+    padding: 0;
+}
+aside ul li{
+    margin: 15px 0;
+}
+aside ul li a{
+    padding: 10px;
+    display: block;
+    border-radius: 8px;
+    font-weight: 500;
+    color: var(--sr-text);
+    transition: all 300ms;
+}
+aside ul li a:hover,
+aside ul li a.active{
+    background-color: var(--primary);
+    color: var(--background);
+}
+aside .togglebutn{
+    width: 30px;
+    display: grid;
+    background: var(--foreground);
+    place-content: center;
+    color: var(--sr-text);
+    height: 30px;
+    border-radius: 0 15px 15px 0;
+    right: -30px;
+    position: absolute;
+    z-index: -1;
+}
