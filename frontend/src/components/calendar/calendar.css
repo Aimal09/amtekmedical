@@ -4,6 +4,14 @@
 .calendar{
     gap: 1px;
 }
+.day.cal-col > div:nth-of-type(1),
+.cal-col > div:nth-of-type(1) {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--foreground);
+    border-bottom: solid 2px var(--hv-text);
+}
 .cal-col>div {
     height: calc(150vh / 13);
     background-color: var(--foreground);
@@ -27,17 +35,40 @@
     display: block;
     padding: 0;
 }
+.day.cal-col>div{
+    position: relative;
+}
 .day.cal-col>div:not(:nth-of-type(1)) p:not(:empty){
     background: var(--primary);
     color: var(--hv-text);
-    position: relative;
+    position: absolute;
     top: var(--value);
-    height: calc(var(--endValue) - var(--value));
+    height: calc(var(--endTime) - var(--value));
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 25px -12px var(--pr-text);
-    opacity: 0.8;
+    opacity: 0.7;
     cursor: pointer;
+    width: 100%;
+    right: 0;
+    z-index: 1;
+}
+.day.cal-col>div:not(:nth-of-type(1)) p:hover{
+    z-index: 9;
+    opacity: .85;
+}
+.day.cal-col>div:not(:nth-of-type(1)) p:has(+p){
+    width: calc(100% - 10px) !important;
+    left: 0;
+    right: inherit !important;
+}
+.day.cal-col>div:not(:nth-of-type(1)) p+p{
+    width: calc(100% - 10px) !important;
+    background-color: var(--cal-item2) !important;
+}
+.day.cal-col>div:not(:nth-of-type(1)) p+p+p{
+    width: calc(100% - 10px) !important;
+    background-color: var(--cal-item3) !important;
 }
 .cal-col p {
     margin: 0;

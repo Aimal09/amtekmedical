@@ -1,0 +1,61 @@
+
+.popup-main {
+    background-color: #0009;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    z-index: 999;
+  }
+  .popup-main .popup {
+    width: 360px;
+    border-radius: 30px;
+    padding: 20px 35px;
+    background-color: var(--foreground);
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .popup-main .popup .popup-header .times {
+    display: grid;
+    width: 25px;
+    height: 25px;
+    background: var(--background);
+    cursor: pointer;
+    place-items: center;
+    border-radius: 50%;
+  }
+  .popup-main .popup .popup-header .times:hover {
+    background-color: var(--secondary);
+    color: var(--foreground);
+  }
+  .popup-main .popup .popup-content {
+    padding: 15px 0;
+    overflow-y: auto;
+  }
+  .popup-main .popup .popup-footer .butn:hover {
+    background-color: var(--secondary);
+  }
+  .topbar .notification-icon {
+    border-radius: 50%;
+    background-color: var(--background);
+    padding: 10px;
+  }
+  .topbar .notification-icon img {
+    width: 15px;
+  }
+  .topbar .user-profile-image {
+    border-radius: 50%;
+    width: 30px;
+  }
+  .topbar .chevron-icon {
+    width: 6px;
+  }
+  .topbar .user-profile {
+    cursor: pointer;
+  }
+  

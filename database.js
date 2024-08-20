@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const env = process.env;
+// let con;
 
 function ConnectSql() {
     let con = mysql.createConnection({
@@ -32,6 +33,25 @@ function ExecuteQueryAsync(sql) {
         });
     });
 }
+
+async function ExecutePostAndGet(updateQuery, newIdQuery) {
+    try {
+        // Execute the consent form entry query
+        const connectedCon = ConnectSql();
+        await connectedCon.query(updateQuery);
+
+        // Execute the query to get the newId
+        return new Promise((resolve, reject) => {
+            connectedCon.query(newIdQuery, (err, res) => {
+                err && reject(err);
+                connectedCon.end();
+                resolve(res);
+            });
+        });
+    } catch (err) {
+        console.error("Error executing query:", err);
+    }
+}
 function ExecuteSPAsync(sql) {
     return new Promise((resolve, reject) => {
         const connectedCon = ConnectSql();
@@ -40,11 +60,11 @@ function ExecuteSPAsync(sql) {
                 connectedCon.end();
                 return reject(err);
             }
-            
+
             connectedCon.end();
             resolve(result[0]);
         });
     });
 }
 
-export {ConnectSql, ExecuteQueryAsync, ExecuteSPAsync};
+export { ConnectSql, ExecuteQueryAsync, ExecuteSPAsync, ExecutePostAndGet };

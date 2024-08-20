@@ -7,7 +7,7 @@ import Dashboard from './pages/dashboard/dashboard';
 import Patients from './pages/patients/patients';
 import AddDoctor from './pages/doctor/add';
 import Docters from './pages/doctor/doctor';
-import Calendar from './components/calendar/calendar';
+import Appointments from './pages/appointments';
 
 function App() {
   const [mainpage, setMainpage] = useState('');
@@ -34,7 +34,7 @@ function App() {
               <Route path="doctors" element={<Docters />} />
               {/* Add more nested routes as needed */}
             </Route>
-            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/calendar" element={<Appointments />} />
           </Routes>
         </div>
       </Router>

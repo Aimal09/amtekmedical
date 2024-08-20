@@ -11,6 +11,8 @@
   --pr-text: #333;
   --sr-text: #999;
   --hv-text: #eee;
+  --cal-item2:#e53935;
+  --cal-item3:#ff9800;
 }
 
 * {
@@ -110,4 +112,11 @@ tbody tr:hover {
 th,
 td {
   padding: 10px;
+}
+.error-msg {
+  color: #E57373 !important;
+  background: #F4433610;
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: solid 1px;
 }

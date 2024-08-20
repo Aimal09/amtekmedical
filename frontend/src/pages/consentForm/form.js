@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import CallApi from '../../callApi';
 import FormInput from '../../components/textFields/formInput';
 import './form.css'
@@ -29,6 +29,12 @@ function Forms() {
     const [printDisabled, setPrintDisabled] = useState(true);
     const sigCanvas = useRef(null);
     const formRef = useRef(null);
+    const [doctorsDropDown, setDoctorsDropDown] = useState();
+
+    const callDoctors = async() => {setDoctorsDropDown(await CallApi('GetAllDoctor'))}
+    useEffect(()=>{
+        callDoctors();
+    },[]);
 
     const saveForm = async () => {
         let formHtml = formRef.current.cloneNode(true);
@@ -53,10 +59,9 @@ function Forms() {
             let _dataUrl = canvas.toDataURL();
             setDataURL(_dataUrl);
             document.body.removeChild(formHtml);
-            let formEntryRes = await CallApi('AddFormEntry', 'POST', { formId: 1, formData: 'fd', formImageUrl: dataURL })
-            let newId = formEntryRes?.newId;
-            if (formEntryRes && newId)
-                await CallApi('AddPatient', 'POST', { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor, newId });
+
+            const result = await CallApi('AddFormEntry', 'POST', { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor});
+            result && refresh();
         });
         setPrintDisabled(false);
     }
@@ -130,9 +135,7 @@ function Forms() {
                 <div className='col-md-6'>
                     <label>Consulting Dr</label>
                     <select onChange={(e) => setDoctor(e.target.value)}>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
+                        {doctorsDropDown&& doctorsDropDown.map(doc=><option value={doc.Id}>{doc.Name}</option>)}
                     </select>
                 </div>
             </div>

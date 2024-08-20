@@ -1,8 +1,8 @@
 const BASE_URL = 'http://localhost:3001/api';
 
-const CallApi = async (endpoint, callType = 'GET', data = null) => {
+const CallApi = async (endpoint, callType = 'GET', data = null, resultAsText = false) => {
     try {
-        const url = `${BASE_URL}/${endpoint}`;
+        let url = `${BASE_URL}/${endpoint}`;
         const token = localStorage.getItem('token');
         
         const headers = {
@@ -47,7 +47,7 @@ const CallApi = async (endpoint, callType = 'GET', data = null) => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        return await response.json();
+        return resultAsText ? await response.text() :await response.json();
     } catch (error) {
         console.error('API Call Error:', error);
         throw error;

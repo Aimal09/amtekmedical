@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { ExecuteQueryAsync, ExecuteSPAsync } from './database.js';
+import { ExecuteQueryAsync, ExecuteSPAsync, ExecutePostAndGet } from './database.js';
 import { GetUserByUsername } from './models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -59,36 +59,27 @@ app.post('/api/AddFormEntry', authMiddleware, async (req,res) => {
         res.status(401).send(false);
         return;
     }
-    const {formId, formData, formImageUrl} = req.body;
+    // const {formId, formData, formImageUrl} = req.body;
+    const  { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor } = req.body;
 
     try{
-        let consentFormEntryQuery = `SET @formId=1; SET @formData='${formData}'; SET @formImageUrl='${formImageUrl}'; SET @newId = 0; CALL AddConsentFormEntry(@formId, @formData, @formImageUrl, @newId); SELECT @newId AS newId;`;
-        let ress = await ExecuteQueryAsync(consentFormEntryQuery);
-        
-        res.status(200).send(ress[ress.length - 1][0]);
-    }
-    catch(err){
-        res.status(500).send(err);
-    }
-});
+        let consentFormEntryQuery = ` CALL AddConsentFormEntry(1, '${JSON.stringify(req.body)}', '', @newId);`;
+        let newIdQuery = 'SELECT @newId as newId';
 
-app.post('/api/AddPatient', authMiddleware, async (req,res) => {
-    if(req.user.Role != 1){
-        res.status(401).send('User is Unauthorize for this API');
-        return;
-    }
-    const  { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor, newId } = req.body;
+        // Add consent form entry
+        let ress = await ExecutePostAndGet(consentFormEntryQuery,newIdQuery);
+        const newId = ress[0]?.newId;
 
-    try{
-        let patientQuery = `SET @p0='${name}'; SET @p1='${age}'; SET @p2='${regno}'; SET @p3='${contact}'; SET @p4='${email}'; 
-        SET @p5='${nationality}'; SET @p6='${occupation}'; SET @p7='${emergencyPhone}'; SET @p8='${refferdBy}'; 
-        SET @p9='${doctor}'; SET @p10='${newId}'; SET @p11='${req.user['BranchId']}'; 
-        CALL AddPatient(@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);`;
+        newId ?? res.status(500).send('unable to add Consent form enty API:LINE 73');
+
+        // add data to patient
+        let patientQuery = `CALL AddPatient('${name}', '${age}', '${regno}', '${contact}', '${email}', '${nationality}', '${occupation}', '${emergencyPhone}', '${refferdBy}', '${doctor}', '${newId}', '${req.user['BranchId']}');`;
         await ExecuteSPAsync(patientQuery);
         
         res.status(200).send(true);
     }
     catch(err){
+        console.log(err)
         res.status(500).send(err);
     }
 });
@@ -101,11 +92,8 @@ app.post('/api/AddDoctor', authMiddleware, async (req,res) => {
     const {name, contact, email, availableDays, availableHours, exceptionalDates} = req.body;
     
     try{
-        let DoctorQuery = `SET @p0='${name}'; SET @p1='${contact}'; SET @p2='${email}'; 
-        SET @p3='${availableDays}'; SET @p4='${availableHours}'; SET @p5='${exceptionalDates}'; SET @p7='${req.user.Id}'; 
-        SET @p6='${req.user.BranchId}';
-        CALL AddDoctor(@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);`;
-        await ExecuteSPAsync(DoctorQuery);
+        let doctorQuery = `CALL AddDoctor('${name}', '${contact}', '${email}', '${availableDays}', '${availableHours}', '${exceptionalDates}', '${req.user.BranchId}', '${req.user.Id}');`;
+        await ExecuteSPAsync(doctorQuery);
         
         res.status(200).send(true);
     }
@@ -121,6 +109,24 @@ app.get('/api/GetPatients', authMiddleware, async (req,res) => {
 app.get('/api/GetAllDoctor', authMiddleware, async (req,res) => {
     let data = await ExecuteSPAsync('CALL GetAllDoctor');
     res.status(200).send(data);
+});
+app.get('/api/GetAppointmentsByDate', authMiddleware, async (req,res) => {
+    let {startDate, endDate} = req.query;
+    let data = await ExecuteSPAsync(`CALL GetAppointmentsByDate ('${startDate}', '${endDate}')`);
+    res.status(200).send(data);
+});
+app.post('/api/AddAppointment', authMiddleware, async (req,res) => {
+    let {doctorId, patientId, appointmentDate, startTime, endTime} = req.body;
+    try{
+        const appointmentQuery = `CALL AddAppoinment ('${doctorId}','${patientId}','${appointmentDate}','${startTime}', '${endTime}',@msg)`;
+        const appointmentRes = 'SELECT @msg as Msg';
+        const ress = await ExecutePostAndGet(appointmentQuery,appointmentRes);
+        res.status(200).send(ress[0]?.Msg);
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).send(err);
+    }
 });
 
 
