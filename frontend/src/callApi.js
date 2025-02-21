@@ -55,3 +55,4 @@ const CallApi = async (endpoint, callType = 'GET', data = null, resultAsText = f
 };
 
 export default CallApi;
+

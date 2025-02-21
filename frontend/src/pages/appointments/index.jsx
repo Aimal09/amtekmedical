@@ -68,9 +68,10 @@ export default function Appointments() {
                 const index = _start.hour();
                 const title = ap.DoctorName;
                 const startTime = (_start.minute() / 60) * 100;
+                const id = ap.Id;
                 const endTime = (startTime + (_end.diff(_start, 'minutes') / 60) * 100);
                 if (!appointmentObj.hasOwnProperty(index)) appointmentObj[index] = [];
-                appointmentObj[index].push({ title, startTime, endTime });
+                appointmentObj[index].push({ title, startTime, endTime,id });
             })
 
             _schedules.push({ date: d, ...appointmentObj });

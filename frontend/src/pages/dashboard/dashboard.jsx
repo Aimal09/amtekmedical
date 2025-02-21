@@ -9,7 +9,7 @@ function Dashboard() {
         <div className="dashboard-container">
             <aside>
                 <span className={'togglebutn ' + (toggleAside && 'open')} onClick={(e)=> setToggleAside(!toggleAside)}><i className="far fa-chevron-right"></i></span>
-                <ul className='navlinks text-center'>
+                <ul className='navlinks '>
                     <li><NavLink to="form" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-file-medical-alt"></i> Consent Form</NavLink></li>
                     <li><NavLink to="patients" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Patient List</NavLink></li>
                     <li><NavLink to="addDoctor" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Add Doctor</NavLink></li>

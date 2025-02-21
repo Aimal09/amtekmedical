@@ -16,11 +16,11 @@ function Forms() {
     const [emergencyPhone, setEmergencyPhone] = useState('');
     const [refferdBy, setRefferdBy] = useState('');
     const [doctor, setDoctor] = useState('');
-    const [healthProblem, setHealthProblem] = useState('');
-    const [bloodPresure, setBloodPresure] = useState('');
-    const [allergyProblems, setAllergyProblems] = useState('');
-    const [thyroidProblems, setThyroidProblems] = useState('');
-    const [asthama, setAsthama] = useState('');
+    const [healthProblem, setHealthProblem] = useState();
+    const [bloodPresure, setBloodPresure] = useState();
+    const [allergyProblems, setAllergyProblems] = useState();
+    const [thyroidProblems, setThyroidProblems] = useState();
+    const [asthama, setAsthama] = useState();
     const [anyOther, setAnyOther] = useState('');
     const [medication, setMedication] = useState('');
     const [pregnant, setPregnant] = useState('');
@@ -55,13 +55,21 @@ function Forms() {
         signImg.src = sigCanvas.current.toDataURL();
         formHtml.querySelector('.signature-pad canvas.sigCanvas').replaceWith(signImg);
 
+        const payload = { 
+            name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor,
+            healthProblem, bloodPresure, allergyProblems, thyroidProblems, asthama, anyOther, medication, pregnant
+        };
+
+        console.log("payload",payload)
         html2canvas(formHtml).then(async (canvas) => {
             let _dataUrl = canvas.toDataURL();
             setDataURL(_dataUrl);
             document.body.removeChild(formHtml);
 
-            const result = await CallApi('AddFormEntry', 'POST', { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor});
-            result && refresh();
+            const result = await CallApi('AddFormEntry', 'POST',payload);
+             
+            console.log("API Response:", result);
+            // result && refresh();
         });
         setPrintDisabled(false);
     }
@@ -119,56 +127,56 @@ function Forms() {
                 <FormInput inputType='number' inputValue={age} onInputChange={(e) => setAge(e.target.value)} label='age' className='col-md-6' />
             </div>
             <div className='row'>
-                <FormInput inputType='text' inputValue={regno} onInputChange={(e) => setRegno(e.target.value)} label='reg.no' className='col-md-6' />
+                <FormInput inputType='email' inputValue={email} onInputChange={(e) => setEmail(e.target.value)} label='email' className='col-md-6' />
                 <FormInput inputType='text' inputValue={contact} onInputChange={(e) => setContact(e.target.value)} label='contact' className='col-md-6' />
             </div>
             <div className='row'>
-                <FormInput inputType='email' inputValue={email} onInputChange={(e) => setEmail(e.target.value)} label='email' className='col-md-6' />
-                <FormInput inputType='text' inputValue={nationality} onInputChange={(e) => setNationality(e.target.value)} label='Nationality' className='col-md-6' />
-            </div>
-            <div className='row'>
-                <FormInput inputType='text' inputValue={occupation} onInputChange={(e) => setOccupation(e.target.value)} label='Occupation' className='col-md-6' />
+                <FormInput inputType='text' inputValue={regno} onInputChange={(e) => setRegno(e.target.value)} label='reg.no' className='col-md-6' />
                 <FormInput inputType='text' inputValue={emergencyPhone} onInputChange={(e) => setEmergencyPhone(e.target.value)} label='Emergency Phone #' className='col-md-6' />
             </div>
             <div className='row'>
-                <FormInput inputType='text' inputValue={refferdBy} onInputChange={(e) => setRefferdBy(e.target.value)} label='Reffered To Us By' className='col-md-6' />
+                <FormInput inputType='text' inputValue={occupation} onInputChange={(e) => setOccupation(e.target.value)} label='Occupation' className='col-md-6' />
+                <FormInput inputType='text' inputValue={nationality} onInputChange={(e) => setNationality(e.target.value)} label='Nationality' className='col-md-6' />
+            </div>
+            <div className='row'>
                 <div className='col-md-6'>
                     <label>Consulting Dr</label>
                     <select onChange={(e) => setDoctor(e.target.value)}>
                         {doctorsDropDown&& doctorsDropDown.map(doc=><option value={doc.Id}>{doc.Name}</option>)}
                     </select>
                 </div>
+                <FormInput inputType='text' inputValue={refferdBy} onInputChange={(e) => setRefferdBy(e.target.value)} label='Reffered To Us By' className='col-md-6' />
             </div>
             <div>
                 <h4 className='mb-3 mt-4'>medical health histroy</h4>
             </div>
             <div>
-                <label>HEART PROBLEM</label>
-                <input type="checkbox" value={healthProblem} onChange={(e) => setHealthProblem(e.target.value)} />
+                <label>BLOOD PRESURE</label>
+                <input type="checkbox"  checked = {bloodPresure} onChange={(e) => setBloodPresure(e.target.checked)} />
             </div>
             <div>
-                <label>BLOOD PRESURE</label>
-                <input type="checkbox" value={bloodPresure} onChange={(e) => setBloodPresure(e.target.value)} />
+                <label>HEART PROBLEM</label>
+                <input type="checkbox" checked={healthProblem} onChange={(e) => setHealthProblem(e.target.checked)} />
             </div>
             <div>
                 <label>ALLERGY PROBLEMS</label>
-                <input type="checkbox" value={allergyProblems} onChange={(e) => setAllergyProblems(e.target.value)} />
-            </div>
-            <div>
-                <label>THYROID PROBLEM</label>
-                <input type="checkbox" value={thyroidProblems} onChange={(e) => setThyroidProblems(e.target.value)} />
+                <input type="checkbox"  checked = {allergyProblems} onChange={(e) => setAllergyProblems(e.target.checked)} />
             </div>
             <div>
                 <label>ASTHAMA</label>
-                <input type="checkbox" value={asthama} onChange={(e) => setAsthama(e.target.value)} />
+                <input type="checkbox" checked={asthama} onChange={(e) => setAsthama(e.target.checked)} />
+            </div>
+            <div>
+                <label>THYROID PROBLEM</label>
+                <input type="checkbox" checked={thyroidProblems} onChange={(e) => setThyroidProblems(e.target.checked)} />
             </div>
             <div className='row mt-4'>
-                <FormInput inputType='text' label='Any Other Medical Problem Please Specify' className='col-md-12' inputValue={anyOther} onChange={(e) => setAnyOther(e.target.value)} />
-                <FormInput inputType='text' label='During The-Past 12 Months Are You On Any Medication/Treatment?' className='col-md-12' inputValue={medication} onChange={(e) => setMedication(e.target.value)} />
+                <FormInput inputType='text' label='Any Other Medical Problem Please Specify' className='col-md-12' inputValue={anyOther} onInputChange={(e) => setAnyOther(e.target.value)} />
+                <FormInput inputType='text' label='During The-Past 12 Months Are You On Any Medication/Treatment?' className='col-md-12' inputValue={medication} onInputChange={(e) => setMedication(e.target.value)} />
             </div>
             <div className='mb-4'>
                 <label>ARE YOU PREGNANT? (For Women Only)</label>
-                <input type="checkbox" value={pregnant} onChange={(e) => setPregnant(e.target.value)} />
+                <input type="checkbox" checked={pregnant} onChange={(e) => setPregnant(e.target.checked)} />
             </div>
             <SignaturePad ref={sigCanvas} />
             <div className='d-flex'>

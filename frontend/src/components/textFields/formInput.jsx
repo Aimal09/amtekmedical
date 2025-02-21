@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './formInput.css'
 
-const FormInput = ({ label, inputType, placeholder, inputValue, id, onInputChange, className }) => {
+const FormInput = ({ label,maxLength, inputType, placeholder, inputValue, id, onInputChange, className }) => {
     return (
         <div className={"input-with-label " + (className || "")}>
             {label && <label>{label}</label>}
@@ -12,6 +12,7 @@ const FormInput = ({ label, inputType, placeholder, inputValue, id, onInputChang
                 value={inputValue || undefined}
                 id={id || undefined}
                 onChange={onInputChange}
+                maxLength={maxLength}
             />
         </div>
     );

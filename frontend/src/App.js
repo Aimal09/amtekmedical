@@ -8,6 +8,7 @@ import Patients from './pages/patients/patients';
 import AddDoctor from './pages/doctor/add';
 import Docters from './pages/doctor/doctor';
 import Appointments from './pages/appointments';
+import ScheduleDetails from './pages/schedule';
 
 function App() {
   const [mainpage, setMainpage] = useState('');
@@ -22,23 +23,30 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
-            <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
-            <Route path="/dashboard" element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}>
-              <Route path="form" element={<Forms />} />
-              <Route path="patients" element={<Patients />} />
-              <Route path="addDoctor" element={<AddDoctor />} />
-              <Route path="doctors" element={<Docters />} />
-              {/* Add more nested routes as needed */}
-            </Route>
-            <Route path="/calendar" element={<Appointments />} />
-          </Routes>
-        </div>
-      </Router>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
+          <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
+          
+          {/* 🟢 Dashboard Routes */}
+          <Route path="/dashboard" element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}>
+            <Route path="form" element={<Forms />} />
+            <Route path="patients" element={<Patients />} />
+            <Route path="addDoctor" element={<AddDoctor />} />
+            <Route path="doctors" element={<Docters />} />
+          </Route>
+  
+          {/* 🟢 Move Schedule Route OUTSIDE Dashboard */}
+          <Route path="/schedule" element={<ScheduleDetails />} /> 
+  
+          {/* 🟢 Other Routes */}
+          <Route path="/calendar" element={<Appointments />} />
+        </Routes>
+      </div>
+    </Router>
+  </div>
+  
   );
 }
 

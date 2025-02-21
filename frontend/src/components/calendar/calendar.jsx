@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import './calendar.css'
 import Day from "./day";
+import { useNavigate } from "react-router-dom";
 
 export default function Calendar({ schedules }) {
+    const navigate = useNavigate(); // useNavigate Hook
+
+    const handleDayClick = (date) => {
+        // navigate("/schedule/")
+        //    console.log("Navigating to:", `/schedule/${date}`); // Debugging line
+           navigate(`/schedule?date=${date}`);
+    };
     return (
         <div className="calendar weekview d-flex">
             <div className="hours cal-col">
@@ -32,7 +40,10 @@ export default function Calendar({ schedules }) {
                 <div><p>22:00</p></div>
                 <div><p>23:00</p></div>
             </div>
-            {schedules && schedules.map(schedule => (<Day key={schedule.date} date={schedule.date} schedules={schedule} />))}
+            {schedules && schedules.map(schedule => (
+                 <Day date={schedule.date} schedules={schedule} />
+                // <Day key={schedule.date} date={schedule.date} schedules={schedule} />
+                ))}
         </div>
     );
 }

@@ -60,7 +60,7 @@ app.post('/api/AddFormEntry', authMiddleware, async (req,res) => {
         return;
     }
     // const {formId, formData, formImageUrl} = req.body;
-    const  { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor } = req.body;
+    const  { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor,healthProblem, bloodPresure, allergyProblems, thyroidProblems, asthama, anyOther, medication, pregnant } = req.body;
 
     try{
         let consentFormEntryQuery = ` CALL AddConsentFormEntry(1, '${JSON.stringify(req.body)}', '', @newId);`;
@@ -73,7 +73,7 @@ app.post('/api/AddFormEntry', authMiddleware, async (req,res) => {
         newId ?? res.status(500).send('unable to add Consent form enty API:LINE 73');
 
         // add data to patient
-        let patientQuery = `CALL AddPatient('${name}', '${age}', '${regno}', '${contact}', '${email}', '${nationality}', '${occupation}', '${emergencyPhone}', '${refferdBy}', '${doctor}', '${newId}', '${req.user['BranchId']}');`;
+        let patientQuery = `CALL AddPatient('${name}', '${age}', '${regno}', '${contact}', '${email}', '${nationality}', '${occupation}','${emergencyPhone}', '${refferdBy}', '${doctor}', '${newId}', '${req.user['BranchId']}', '${healthProblem?1:0}','${bloodPresure?1:0}','${allergyProblems?1:0}','${thyroidProblems?1:0}', '${asthama?1:0}', '${anyOther?1:0}', '${medication?1:0}', '${pregnant?1:0}');`;
         await ExecuteSPAsync(patientQuery);
         
         res.status(200).send(true);
@@ -110,6 +110,42 @@ app.get('/api/GetAllDoctor', authMiddleware, async (req,res) => {
     let data = await ExecuteSPAsync('CALL GetAllDoctor');
     res.status(200).send(data);
 });
+app.get('/api/GetAppointmentById', authMiddleware, async (req, res) => {
+    console.log("Query Params: ", req.query); // Debugging ke liye
+
+    let { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({ error: "ID is required" });
+    }
+
+    try {
+        let data = await ExecuteSPAsync(`CALL GetAppointmentById(${id})`);
+        res.status(200).send(data);
+    } catch (error) {
+        console.error("Database Error: ", error);
+        res.status(500).json({ error: "Database error", details: error.message });
+    }
+});
+
+app.get('/api/GetAppointmentByAppointmentId', authMiddleware, async (req, res) => {
+    console.log("Query Params: ", req.query);
+
+    let { appoinmentId } = req.query; // Make sure frontend sends correct key
+
+    if (!appoinmentId) {
+        return res.status(400).json({ error: "ID is required" });
+    }
+
+    try {
+        let data = await ExecuteSPAsync(`CALL GetAppointmentByAppointmentId(${appoinmentId})`);
+        res.status(200).send(data);
+    } catch (error) {
+        console.error("Database Error: ", error);
+        res.status(500).json({ error: "Database error", details: error.message });
+    }
+});
+
 app.get('/api/GetAppointmentsByDate', authMiddleware, async (req,res) => {
     let {startDate, endDate} = req.query;
     let data = await ExecuteSPAsync(`CALL GetAppointmentsByDate ('${startDate}', '${endDate}')`);
@@ -118,13 +154,31 @@ app.get('/api/GetAppointmentsByDate', authMiddleware, async (req,res) => {
 app.post('/api/AddAppointment', authMiddleware, async (req,res) => {
     let {doctorId, patientId, appointmentDate, startTime, endTime} = req.body;
     try{
-        const appointmentQuery = `CALL AddAppoinment ('${doctorId}','${patientId}','${appointmentDate}','${startTime}', '${endTime}',@msg)`;
+        const appointmentQuery = `CALL AddAppoinment ('${doctorId}','${patientId}','${appointmentDate}','${startTime}', '${endTime}')`;
         const appointmentRes = 'SELECT @msg as Msg';
         const ress = await ExecutePostAndGet(appointmentQuery,appointmentRes);
         res.status(200).send(ress[0]?.Msg);
     }
     catch(err){
         console.log(err)
+        res.status(500).send(err);
+    }
+});
+app.post('/api/AddCasesheet', authMiddleware, async (req, res) => {
+    console.log("Received Payload:", req.body); // Debugging line
+    
+    let { createdOn, amount, appointmentId, prescription } = req.body;
+    
+    try {
+        const appointmentQuery = `CALL AddCasesheet ('${createdOn}', '${amount}', '${appointmentId}', '${prescription}')`;
+
+        
+        const dbResponse = await ExecuteSPAsync(appointmentQuery); 
+        
+        res.status(200).send(dbResponse); 
+    } 
+    catch (err) {
+        console.log("Error in AddCasesheet:", err);
         res.status(500).send(err);
     }
 });
