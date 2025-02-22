@@ -10,7 +10,7 @@
 .input-with-label input {
     width: 100%;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: solid 1px var(--sr-text);
     outline-color: var(--primary);
     box-sizing: border-box;

@@ -12,9 +12,9 @@ function Dashboard() {
                 <ul className='navlinks '>
                     <li><NavLink to="form" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-file-medical-alt"></i> Consent Form</NavLink></li>
                     <li><NavLink to="patients" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Patient List</NavLink></li>
+                    <li><NavLink to="/calendar" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Calendar</NavLink></li>
                     <li><NavLink to="addDoctor" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Add Doctor</NavLink></li>
                     <li><NavLink to="doctors" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Doctor List</NavLink></li>
-                    <li><NavLink to="/calendar" className={({ isActive }) => (isActive ? "active" : "")}><i className="fal fa-hospital-user"></i> Calendar</NavLink></li>
                 </ul>
             </aside>
 

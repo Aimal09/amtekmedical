@@ -44,8 +44,8 @@ export default function Docters() {
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Contact</th>
                             <th>Email</th>
+                            <th>Contact</th>
                             <th>Avaialable Days</th>
                             <th>Avaialable Hours</th>
                             <th>exceptional Dates</th>
@@ -55,8 +55,8 @@ export default function Docters() {
                         {filteredDoctorList.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.Name}</td>
-                                <td>{row.Contact}</td>
                                 <td>{row.Email}</td>
+                                <td>{row.Contact}</td>
                                 <td>{row.AvailableDays}</td>
                                 <td>{row.AvailableHours}</td>
                                 <td>{row.ExceptionalDates}</td>

@@ -51,15 +51,13 @@ export default function AddDoctor() {
     }
     return (
         <form>
-            <h2 className='text-center mb-5'>Add Doctor</h2>
+            <h2 className='mb-5'>Add Doctor</h2>
             <h4 className='mb-4'>Doctor Information</h4>
             <div className='row'>
                 <FormInput inputType='text' inputValue={name} onInputChange={(e) => setName(e.target.value)} label='Doctor Name' className='col-md-6' />
                 <FormInput inputType='text' inputValue={contact} onInputChange={(e) => setContact(e.target.value)} label='Contact Number' className='col-md-6' />
             </div>
             <div className='row'>
-                <FormInput inputType='email' inputValue={email} onInputChange={(e) => setEmail(e.target.value)} label='email address' className='col-md-6' />
-                {/* <FormInput inputType='text' inputValue={availableDays} onInputChange={(e) => setAvailableDays(e.target.value)} label='Avaialable Days (ex: mon,tue,wed,thur,fri,sat,sun)' className='col-md-6' /> */}
                 <div className="col-md-6 d-flex flex-column justify-content-center">
                     <label className="mb-3">Available Days {availableDays}</label>
                     <div className="d-flex align-items-center mb-3">
@@ -93,6 +91,8 @@ export default function AddDoctor() {
                         </div>
                     </div>
                 </div>
+                <FormInput inputType='email' inputValue={email} onInputChange={(e) => setEmail(e.target.value)} label='email address' className='col-md-6' />
+                {/* <FormInput inputType='text' inputValue={availableDays} onInputChange={(e) => setAvailableDays(e.target.value)} label='Avaialable Days (ex: mon,tue,wed,thur,fri,sat,sun)' className='col-md-6' /> */}
             </div>
             <div className='row'>
                 <FormInput inputType='text' inputValue={availableHours} onInputChange={(e) => setAvailableHours(e.target.value)} label='Available Hours (ex: 0930-1230 or 0900,1000,1200)' className='col-md-6' />

@@ -50,11 +50,11 @@ export default function Patients() {
                         <tr>
                             <th>Name</th>
                             <th>Age</th>
-                            <th>Reg.No</th>
-                            <th>Contact</th>
                             <th>Email</th>
-                            <th>Nationality</th>
+                            <th>Contact</th>
+                            <th>Reg.No</th>
                             <th>Occupation</th>
+                            <th>Nationality</th>
                             <th>EmergencyPhone</th>
                             <th>RefferedBy</th>
                             <th>DoctorID</th>
@@ -66,11 +66,11 @@ export default function Patients() {
                             <tr key={index}>
                                 <td>{row.Name}</td>
                                 <td>{row.Age}</td>
-                                <td>{row.RegNo}</td>
-                                <td>{row.Contact}</td>
                                 <td>{row.Email}</td>
-                                <td>{row.Nationality}</td>
+                                <td>{row.Contact}</td>
+                                <td>{row.RegNo}</td>
                                 <td>{row.Occupation}</td>
+                                <td>{row.Nationality}</td>
                                 <td>{row.EmergencyPhone}</td>
                                 <td>{row.RefferedBy}</td>
                                 <td>{row.DoctorId}</td>

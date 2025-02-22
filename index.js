@@ -151,19 +151,23 @@ app.get('/api/GetAppointmentsByDate', authMiddleware, async (req,res) => {
     let data = await ExecuteSPAsync(`CALL GetAppointmentsByDate ('${startDate}', '${endDate}')`);
     res.status(200).send(data);
 });
-app.post('/api/AddAppointment', authMiddleware, async (req,res) => {
-    let {doctorId, patientId, appointmentDate, startTime, endTime} = req.body;
-    try{
-        const appointmentQuery = `CALL AddAppoinment ('${doctorId}','${patientId}','${appointmentDate}','${startTime}', '${endTime}')`;
-        const appointmentRes = 'SELECT @msg as Msg';
-        const ress = await ExecutePostAndGet(appointmentQuery,appointmentRes);
-        res.status(200).send(ress[0]?.Msg);
-    }
-    catch(err){
-        console.log(err)
+app.post('/api/AddAppointment', authMiddleware, async (req, res) => {
+    let { doctorId, patientId, appointmentDate, startTime, endTime } = req.body;
+    try {
+        // Stored procedure call with @msg as an OUT parameter
+        const appointmentQuery = `CALL AddAppoinment('${doctorId}','${patientId}','${appointmentDate}','${startTime}', '${endTime}', @msg)`;
+        const appointmentRes = `SELECT @msg AS Msg`; // Correcting the SELECT statement
+
+        // Execute the stored procedure
+        const ress = await ExecutePostAndGet(appointmentQuery, appointmentRes);
+
+        res.status(200).send(ress[0]?.Msg); // Sending the message back
+    } catch (err) {
+        console.log(err);
         res.status(500).send(err);
     }
 });
+
 app.post('/api/AddCasesheet', authMiddleware, async (req, res) => {
     console.log("Received Payload:", req.body); // Debugging line
     

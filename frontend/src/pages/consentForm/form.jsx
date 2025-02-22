@@ -120,7 +120,7 @@ function Forms() {
     }
     return (
         <form ref={formRef} className='patientform'>
-            <h2 className='text-center mb-5'>General Consent Form</h2>
+            <h2 className='mb-5'>General Consent Form</h2>
             <h4 className='mb-4'>General Information</h4>
             <div className='row'>
                 <FormInput inputType='text' inputValue={name} onInputChange={(e) => setName(e.target.value)} label='name' className='col-md-6' />
@@ -180,8 +180,8 @@ function Forms() {
             </div>
             <SignaturePad ref={sigCanvas} />
             <div className='d-flex'>
-                <button type="button" className='butn-sec mt-4 mr-4' onClick={saveForm}>Save</button>
-                <button type="button" className='butn mt-4' disabled={printDisabled} onClick={printForm}>Print</button>
+                <button type="button" className='butn mt-4 mr-4' disabled={printDisabled} onClick={printForm}>Print</button>
+                <button type="button" className='butn-sec mt-4 ' onClick={saveForm}>Save</button>
                 <button type="button" className='butn-sec mt-4 ml-auto' onClick={refresh}>New</button>
             </div>
             {/* <img src={dataURL}/> */}
