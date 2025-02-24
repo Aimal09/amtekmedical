@@ -81,7 +81,7 @@ button:is([disabled]) {
 .table{
   width: 100%;
   overflow: auto;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 table {
   width: 100%;

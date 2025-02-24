@@ -15,7 +15,7 @@ export default function Calendar({ schedules }) {
         <div className="calendar weekview d-flex">
             <div className="hours cal-col">
                 <div><p></p></div>
-                <div><p>12:00</p></div>
+                <div><p>00:00</p></div>
                 <div><p>01:00</p></div>
                 <div><p>02:00</p></div>
                 <div><p>03:00</p></div>
