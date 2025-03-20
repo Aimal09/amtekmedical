@@ -179,13 +179,14 @@ app.post('/api/AddCasesheet', authMiddleware, async (req, res) => {
         
         const dbResponse = await ExecuteSPAsync(appointmentQuery); 
         
-        res.status(200).send(dbResponse); 
+        res.status(200).send({sucess:true,data:dbResponse}); 
     } 
     catch (err) {
         console.log("Error in AddCasesheet:", err);
         res.status(500).send(err);
     }
 });
+
 
 
 
