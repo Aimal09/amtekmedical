@@ -49,6 +49,7 @@ export default function Docters() {
                             <th>Avaialable Days</th>
                             <th>Avaialable Hours</th>
                             <th>exceptional Dates</th>
+                            <th>Department OF Doctor</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,6 +61,7 @@ export default function Docters() {
                                 <td>{row.AvailableDays}</td>
                                 <td>{row.AvailableHours}</td>
                                 <td>{row.ExceptionalDates}</td>
+                                <td>{row.departmentOfDoctor}</td>
                             </tr>
                         ))}
                     </tbody>

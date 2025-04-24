@@ -1,0 +1,66 @@
+/* .slidein {
+    position: fixed;
+    padding: 25px;
+    right: -100%;
+    top: 0;
+    height: 100vh;
+    background-color: var(--white);
+    z-index: 9;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 0 20px -10px var(--nav-light);
+    min-width: 350px;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    transition: all 300ms;
+}
+.slidein .content {
+    overflow: auto;
+}
+.slidein.show {
+    right: 0;
+}
+.slidein{
+    max-width: 100%;
+}
+.slide-in-container {
+    max-height: 80vh; 
+    overflow-y: auto; 
+    padding: 20px;
+} */
+
+
+.slidein {
+    position: fixed;
+    padding: 25px;
+    right: -100%;
+    top: 0;
+    height: auto;  /* Yeh 100vh mat rakho */
+    max-height: 100vh; /* Yeh ensure karega ke slide-in pura screen na le */
+    background-color: var(--white);
+    z-index: 9;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 0 20px -10px var(--nav-light);
+    min-width: 350px;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    transition: all 300ms;
+}
+
+.slidein .content {
+    overflow-y: auto;  /* Yeh ensure karega ke jab text zyada ho, scroll aaye */
+    flex-grow: 1;
+}
+
+.slidein.show {
+    right: 0;
+}
+
+.slide-in-container {
+    max-height: 90vh; /* Jitna screen cover karna hai set kar lo */
+    overflow-y: auto; /* Jab text zyada ho to scroll ajaye */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}

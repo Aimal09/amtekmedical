@@ -27,6 +27,8 @@ const port = env.PORT || 3000;
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await GetUserByUsername(username);
+    console.log("88888888888888888888888888888");
+    console.log(user.password);
     const hashedPassword = password;
 
     console.log(user);
@@ -54,45 +56,65 @@ app.get('/api/GetAllForms', authMiddleware, async (req, res) => {
     res.status(200).send(data);
 });
 
-app.post('/api/AddFormEntry', authMiddleware, async (req,res) => {
-    if(req.user.Role != 1){
+app.post('/api/AddFormEntry', authMiddleware, async (req, res) => {
+    if (req.user.Role != 1) {
         res.status(401).send(false);
         return;
     }
-    // const {formId, formData, formImageUrl} = req.body;
-    const  { name, age, regno, contact, email, nationality, occupation, emergencyPhone, refferdBy, doctor,healthProblem, bloodPresure, allergyProblems, thyroidProblems, asthama, anyOther, medication, pregnant } = req.body;
 
-    try{
-        let consentFormEntryQuery = ` CALL AddConsentFormEntry(1, '${JSON.stringify(req.body)}', '', @newId);`;
+    const {
+        name, age, regno, contact, email, nationality, occupation, emergencyPhone,
+        refferdBy, doctor, healthProblem, bloodPresure, allergyProblems, thyroidProblems,
+        asthama, anyOther, medication, pregnant, painScale, initialStatement,
+        passportNo, emiratesNo, signImg // ✅ Added signImg here
+    } = req.body;
+
+    console.log("Received PainScale:", req.body.painScale);
+
+    try {
+        let consentFormEntryQuery = `CALL AddConsentFormEntry(100, '${JSON.stringify(req.body)}', '', @newId);`;
         let newIdQuery = 'SELECT @newId as newId';
 
         // Add consent form entry
-        let ress = await ExecutePostAndGet(consentFormEntryQuery,newIdQuery);
+        let ress = await ExecutePostAndGet(consentFormEntryQuery, newIdQuery);
         const newId = ress[0]?.newId;
 
-        newId ?? res.status(500).send('unable to add Consent form enty API:LINE 73');
+        if (!newId) {
+            res.status(500).send('Unable to add Consent form entry API:LINE 73');
+            return;
+        }
 
-        // add data to patient
-        let patientQuery = `CALL AddPatient('${name}', '${age}', '${regno}', '${contact}', '${email}', '${nationality}', '${occupation}','${emergencyPhone}', '${refferdBy}', '${doctor}', '${newId}', '${req.user['BranchId']}', '${healthProblem?1:0}','${bloodPresure?1:0}','${allergyProblems?1:0}','${thyroidProblems?1:0}', '${asthama?1:0}', '${anyOther?1:0}', '${medication?1:0}', '${pregnant?1:0}');`;
+        // ✅ Add passportNo, emiratesNo, and signImg into query
+        let patientQuery = `CALL AddPatient(
+            '${name}', '${age}', '${regno}', '${contact}', '${email}', '${nationality}', '${occupation}', '${emergencyPhone}',
+            '${refferdBy}', '${doctor}', '${newId}', '${req.user['BranchId']}',
+            '${healthProblem ? 1 : 0}', '${bloodPresure ? 1 : 0}', '${allergyProblems ? 1 : 0}', '${thyroidProblems ? 1 : 0}',
+            '${asthama ? 1 : 0}', '${anyOther}', '${medication}', '${pregnant ? 1 : 0}', '${painScale}', '${initialStatement}',
+            '${passportNo}', '${emiratesNo}', '${signImg}'
+        );`;
+
+        console.log("Executing Query:", patientQuery);
         await ExecuteSPAsync(patientQuery);
-        
+
         res.status(200).send(true);
-    }
-    catch(err){
-        console.log(err)
+    } catch (err) {
+        console.log(err);
         res.status(500).send(err);
     }
 });
+
 
 app.post('/api/AddDoctor', authMiddleware, async (req,res) => {
     if(req.user.Role != 1){
         res.status(401).send(false);
         return;
     }
-    const {name, contact, email, availableDays, availableHours, exceptionalDates} = req.body;
+    const {name, contact, email, availableDays, availableHours, exceptionalDates,departmentOfDoctor} = req.body;
+    console.log("han bhai department of Docctor kaisa araha hai",departmentOfDoctor)
     
     try{
-        let doctorQuery = `CALL AddDoctor('${name}', '${contact}', '${email}', '${availableDays}', '${availableHours}', '${exceptionalDates}', '${req.user.BranchId}', '${req.user.Id}');`;
+        let doctorQuery = `CALL AddDoctor('${name}', '${contact}', '${email}', '${availableDays}', '${availableHours}', '${exceptionalDates}', '${req.user.BranchId}', '${departmentOfDoctor}', '${req.user.Id}');`;
+
         await ExecuteSPAsync(doctorQuery);
         
         res.status(200).send(true);
@@ -168,26 +190,109 @@ app.post('/api/AddAppointment', authMiddleware, async (req, res) => {
     }
 });
 
-app.post('/api/AddCasesheet', authMiddleware, async (req, res) => {
+app.post('/api/InsertConsentFormSigned', authMiddleware, async (req, res) => {
     console.log("Received Payload:", req.body); // Debugging line
-    
-    let { createdOn, amount, appointmentId, prescription } = req.body;
-    
-    try {
-        const appointmentQuery = `CALL AddCasesheet ('${createdOn}', '${amount}', '${appointmentId}', '${prescription}')`;
 
+    const { formId, signatureUrl, patientId, appointmentId } = req.body;
+
+    try {
+        const query = `CALL InsertConsentFormSigned('${formId}', '${signatureUrl}', '${patientId}', '${appointmentId}')`;
+
+        console.log("Executing query:", query); // Debugging line
+
+        const dbResponse = await ExecuteSPAsync(query); 
         
-        const dbResponse = await ExecuteSPAsync(appointmentQuery); 
-        
-        res.status(200).send({sucess:true,data:dbResponse}); 
+        res.status(200).send({ success: true, data: dbResponse }); 
     } 
     catch (err) {
-        console.log("Error in AddCasesheet:", err);
+        console.log("Error in InsertConsentFormSigned:", err);
         res.status(500).send(err);
     }
 });
 
 
+app.post('/api/InsertConsentFormSigned', authMiddleware, async (req, res) => {
+    const { formId, signatureUrl, patientId, appointmentId } = req.body;
+    console.log("payload araha", formId, signatureUrl, patientId, appointmentId );
+  console.log("yehan tak araha hai data ya nhi ")
+    try {
+        const query = `CALL InsertConsentFormSigned(?, ?, ?, ?)`;
+        const values = [formId, signatureUrl, patientId, appointmentId];
+  console.log("values k bad bhi data araha hai ya nhi  ")
+  console.log("Executing query with values:", query, values);
+
+        
+        const dbResponse = await ExecuteSPAsync(query, values);
+      res.status(200).json({ success: true, data: dbResponse });
+    } catch (err) {
+      console.error("Error in InsertConsentFormSigned:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+
+app.get('/api/GetDiagnosis', async (req, res) => {
+    try {
+        const query = "SELECT * FROM Diagnosis WHERE isactive = 1;";
+        const data = await ExecuteQueryAsync(query);
+        res.status(200).json(data);
+    } catch (error) {
+        console.error("Error fetching diagnosis:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+app.get('/api/doctor-departments', async (req, res) => {
+    try {
+        let query = "SELECT * FROM DoctorDepartment";
+        let result = await ExecuteQueryAsync(query);
+
+        console.log("DB Result:", JSON.stringify(result, null, 2)); // ✅ Full Result Print
+
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("API Error:", err);
+        res.status(500).send(err);
+    }
+});
+
+
+app.get('/api/consultantforms', async (req, res) => {
+    try {
+        let  query = `SELECT * FROM ConsentForms WHERE asForm = 0`;
+        let result = await ExecuteQueryAsync(query);
+
+        console.log("DB Result:", JSON.stringify(result, null, 2)); // ✅ Full Result Print
+
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("API Error:", err);
+        res.status(500).send(err);
+    }
+});
+
+
+app.get('/api/ConsentFormsSigned', async (req, res) => {
+    try {
+        let  query = `SELECT * FROM ConsentFormsSigned `;
+        let result = await ExecuteQueryAsync(query);
+
+        console.log("DB Result:", JSON.stringify(result, null, 2)); // ✅ Full Result Print
+        console.log(result)
+
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("API Error:", err);
+        res.status(500).send(err);
+    }
+});
+
+// console.log("DB Result:", user);  // Check what data is coming from DB
+// console.log("Hashed Password:", user.Password); // Check password field
+// console.log("Entered Password:", req.body.password); // Check entered password
+
+// console.log("Entered Password:", password);
+// console.log("Hashed Password from DB:", user.Password);
 
 
 app.listen(port, () => {
