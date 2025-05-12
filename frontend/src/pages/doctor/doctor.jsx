@@ -18,7 +18,6 @@ export default function Docters() {
     }, []);
 
     const handleDelete = async (doctorId) => {
-        console.log("doctorId",doctorId)
         try {
             await CallApi(`doctor/deletedoctor/${doctorId}`, 'PUT');
             alert('Doctor deactivated successfully');
@@ -65,7 +64,7 @@ export default function Docters() {
                         <th>Available Hours</th>
                         <th>Exceptional Dates</th>
                         <th>Department Of Doctor</th>
-                        <th>Delete Doctor</th> {/* 🔥 New column */}
+                        <th>Action</th> {/* 🔥 New column */}
                     </tr>
                     </thead>
                     <tbody>
@@ -78,7 +77,7 @@ export default function Docters() {
                                 <td>{row.AvailableHours}</td>
                                 <td>{row.ExceptionalDates}</td>
                                 <td>{row.departmentOfDoctor}</td>
-                                <td> <button onClick={()=>handleDelete(row.Id)} > Delete Doctor </button> </td>
+                                <td> <button onClick={()=>handleDelete(row.id)} > Delete Doctor </button> </td>
                             </tr>
                         ))}
                     </tbody>

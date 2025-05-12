@@ -9,7 +9,7 @@ const FormInput = ({ label,maxLength, inputType, placeholder, inputValue, id, on
             <input
                 type={inputType || 'text'}
                 placeholder={placeholder || undefined}
-                value={inputValue || undefined}
+                value={inputValue}
                 id={id || undefined}
                 onChange={onInputChange}
                 maxLength={maxLength}

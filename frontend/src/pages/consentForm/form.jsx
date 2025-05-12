@@ -12,6 +12,7 @@ function Forms() {
     const [regno, setRegno] = useState('');
     const [contact, setContact] = useState('');
     const [email, setEmail] = useState('');
+    
     const [nationality, setNationality] = useState('');
     const [occupation, setOccupation] = useState('');
     const [emergencyPhone, setEmergencyPhone] = useState('');
@@ -43,9 +44,21 @@ function Forms() {
     },[]);
 
 
-
-
     const saveForm = async () => {
+        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    
+        // === Email Validation ===
+        if (!gmailRegex.test(email)) {
+            alert("Please enter a valid Gmail address.");
+            return;
+        }
+    
+        // === Signature Validation ===
+        if (sigCanvas.current && sigCanvas.current.isEmpty()) {
+            alert("Please provide a signature before submitting.");
+            return;
+        }
+    
         let formHtml = formRef.current.cloneNode(true);
         document.body.appendChild(formHtml);
     
@@ -60,18 +73,17 @@ function Forms() {
             d.style.borderBottom = '1px solid #777';
             d.style.color = '#000';
         })
-        let signImg1 = document.createElement('img');
-        signImg1.src = sigCanvas.current.toDataURL();
-        const signImg = sigCanvas.current.toDataURL();
-        formHtml.querySelector('.signature-pad canvas.sigCanvas').replaceWith(signImg1);
-        console.log("sign image",signImg1);
     
-        const payload = { 
-            name, age, regno, contact, email, nationality, occupation, emergencyPhone, 
-            refferdBy, doctor, healthProblem, bloodPresure, allergyProblems, thyroidProblems, 
-            asthama, anyOther, medication, pregnant, painScale: painMessages[painScale], initialStatement,passportNo,emiratesNo,signImg
+        const signImg = sigCanvas.current.toDataURL();
+        let signImg1 = document.createElement('img');
+        signImg1.src = signImg;
+        formHtml.querySelector('.signature-pad canvas.sigCanvas').replaceWith(signImg1);
+    
+        const payload = {
+            name, age, regno, contact, email, nationality, occupation, emergencyPhone,
+            refferdBy, doctor, healthProblem, bloodPresure, allergyProblems, thyroidProblems,
+            asthama, anyOther, medication, pregnant, painScale: painMessages[painScale], initialStatement, passportNo, emiratesNo, signImg
         };
-        console.log("signature picture",sigCanvas);
     
         html2canvas(formHtml, { scale: 2 }).then(async (canvas) => {
             const imgData = canvas.toDataURL('image/png');
@@ -89,46 +101,37 @@ function Forms() {
     
             const result = await CallApi('AddFormEntry', 'POST', payload);
             console.log("API Response:", result);
+            alert("Form submitted successfully!");
+            setName('');
+            setAge('');
+            setRegno('');
+            setContact('');
+            setEmail('');
+            setNationality('');
+            setOccupation('');
+            setEmergencyPhone('');
+            setRefferdBy('');
+            setDoctor('');
+            setHealthProblem('');
+            setBloodPresure('');
+            setAllergyProblems('');
+            setThyroidProblems('');
+            setAsthama('');
+            setAnyOther('');
+            setMedication('');
+            setPregnant('');
+            setPainScale(0);
+            setInitialStatement('');
+            setPassportNo('');
+            setEmiratesNo('');
+            setDataURL(null);
+            setPrintDisabled(true);
+        
+            // ✅ Clear signature pad
+            sigCanvas.current.clear();
         });
     };
-    // const saveForm = async () => {
-    //     let formHtml = formRef.current.cloneNode(true);
-    //     document.body.appendChild(formHtml);
-
-    //     formHtml.style.padding = '10px'
-    //     formHtml.querySelectorAll('button').forEach(d => d.style.display = 'none')
-    //     formHtml.querySelectorAll('.col-md-6').forEach(d => {
-    //         d.classList.remove('col-md-6');
-    //         d.classList.add('col-md-12');
-    //     })
-    //     formHtml.querySelectorAll('input, select').forEach(d => {
-    //         d.style.border = 'none';
-    //         d.style.borderBottom = '1px solid #777';
-    //         d.style.color = '#000';
-    //     })
-    //     let signImg = document.createElement('img');
-    //     signImg.src = sigCanvas.current.toDataURL();
-    //     formHtml.querySelector('.signature-pad canvas.sigCanvas').replaceWith(signImg);
-
-    //     const payload = { 
-    //         name, age, regno, contact, email, nationality, occupation, emergencyPhone, 
-    //         refferdBy, doctor, healthProblem, bloodPresure, allergyProblems, thyroidProblems, 
-    //         asthama, anyOther, medication, pregnant, painScale: painMessages[painScale], initialStatement
-    //     };
-
-    //     console.log("payload",payload)
-    //     html2canvas(formHtml).then(async (canvas) => {
-    //         let _dataUrl = canvas.toDataURL();
-    //         setDataURL(_dataUrl);
-    //         document.body.removeChild(formHtml);
-
-    //         const result = await CallApi('AddFormEntry', 'POST',payload);
-             
-    //         console.log("API Response:", result);
-    //         // result && refresh();
-    //     });
-    //     setPrintDisabled(false);
-    // }
+    
 
     const printForm = async () => {
         // await saveForm();
@@ -195,8 +198,8 @@ function Forms() {
             <h4 className='mb-4'>Fill One Input Field according to your requirements</h4>
 
                 <div className="row">
-                    <FormInput inputType="number" inputValue={emiratesNo} onInputChange={(e)=>setEmiratesNo(e.target.value)} label={"Emirate Number"} className="col-md-6" />
-                    <FormInput inputType="number" inputValue={passportNo} onInputChange={(e)=>setPassportNo(e.target.value)} label={"passport Number"} className="col-md-6"/>
+                    <FormInput inputType="text" inputValue={emiratesNo} onInputChange={(e)=>setEmiratesNo(e.target.value)} label={"Emirate Number"} className="col-md-6" />
+                    <FormInput inputType="text" inputValue={passportNo} onInputChange={(e)=>setPassportNo(e.target.value)} label={"passport Number"} className="col-md-6"/>
                 </div>
                 <div className="row">
                 <FormInput inputType='text' inputValue={regno} onInputChange={(e) => setRegno(e.target.value)} label='reg.no' className='col-md-6' />

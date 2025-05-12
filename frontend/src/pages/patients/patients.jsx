@@ -91,6 +91,8 @@ import FormInput from "../../components/textFields/formInput";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import EditPatient from "./patientEdit";
+import { useNavigate } from "react-router-dom";
 
 export default function Patients() {
   const [patientList, setPatientList] = useState([]);
@@ -107,6 +109,8 @@ export default function Patients() {
   const [formTitle, setFormTitle] = useState("");
   // const [signatureImg, setSignatureImg] = useState("");
   const [patientSignature, setPatientSignature] = useState("");
+
+  const navigate = useNavigate();
 
   // Get all patients on mount
   useEffect(() => {
@@ -191,6 +195,10 @@ export default function Patients() {
     }
   }; // <- important dependency!
 
+  const editfucntion = (patient)=>{
+    navigate("/dashboard/edit-patient",{ state: { patientData: patient } });
+  }
+
   return (
     <>
       <div className="d-flex justify-content-between">
@@ -213,6 +221,7 @@ export default function Patients() {
               <th>RefferedBy</th>
               <th>DoctorID</th>
               <th>Consent Form</th>
+              <th>Edit Patient</th>
             </tr>
           </thead>
           <tbody>
@@ -231,10 +240,13 @@ export default function Patients() {
                 <td>
                   <a
                     style={{ cursor: "pointer", color: "blue" }}
-                    onClick={() => viewForm(row)}
+                    onClick={()=>viewForm(row)}
                   >
                     view
                   </a>
+                </td>
+                <td  >
+                  <Button onClick={()=>editfucntion(row)} >Edit</Button>
                 </td>
               </tr>
             ))}

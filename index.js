@@ -27,8 +27,6 @@ const port = env.PORT || 3000;
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await GetUserByUsername(username);
-    console.log("88888888888888888888888888888");
-    console.log(user.password);
     const hashedPassword = password;
 
     console.log(user);
@@ -210,25 +208,25 @@ app.post('/api/InsertConsentFormSigned', authMiddleware, async (req, res) => {
     }
 });
 
+app.post('/api/AddCasesheet', authMiddleware, async (req, res) => {
+    console.log("Received Payload:", req.body); // Debugging line
 
-app.post('/api/InsertConsentFormSigned', authMiddleware, async (req, res) => {
-    const { formId, signatureUrl, patientId, appointmentId } = req.body;
-    console.log("payload araha", formId, signatureUrl, patientId, appointmentId );
-  console.log("yehan tak araha hai data ya nhi ")
+    const { createdOn, amount, appointmentId, prescription,doctorDiagnosis } = req.body;
+
     try {
-        const query = `CALL InsertConsentFormSigned(?, ?, ?, ?)`;
-        const values = [formId, signatureUrl, patientId, appointmentId];
-  console.log("values k bad bhi data araha hai ya nhi  ")
-  console.log("Executing query with values:", query, values);
+        const query = `CALL AddCasesheet('${createdOn}', '${amount}', '${appointmentId}', '${prescription}', '${doctorDiagnosis}')`;
 
+        console.log("Executing query:", query); // Debugging line
+
+        const dbResponse = await ExecuteSPAsync(query); 
         
-        const dbResponse = await ExecuteSPAsync(query, values);
-      res.status(200).json({ success: true, data: dbResponse });
-    } catch (err) {
-      console.error("Error in InsertConsentFormSigned:", err);
-      res.status(500).json({ success: false, error: err.message });
+        res.status(200).send({ success: true, data: dbResponse }); 
+    } 
+    catch (err) {
+        console.log("Error in AddCasesheet:", err);
+        res.status(500).send(err);
     }
-  });
+});
 
 
 app.get('/api/GetDiagnosis', async (req, res) => {
@@ -252,6 +250,38 @@ app.get('/api/doctor-departments', async (req, res) => {
         res.status(200).json(result);
     } catch (err) {
         console.error("API Error:", err);
+        res.status(500).send(err);
+    }
+});
+
+app.post('/api/EditFormEntry', authMiddleware, async (req, res) => {
+    if (req.user.Role != 1) {
+        res.status(401).send(false);
+        return;
+    }
+
+    const {
+        patientID, name, age, regno, contact, email, nationality, occupation, emergencyPhone,
+        refferdBy, doctor, healthProblem, bloodPresure, allergyProblems, thyroidProblems,
+        asthama, anyOther, medication, pregnant, painScale, initialStatement,
+        passportNo, emiratesNo
+    } = req.body;
+
+    try {
+        let updatePatientQuery = `CALL UpdatePatient(
+            '${patientID}', '${name}', '${age}', '${regno}', '${contact}', '${email}', '${nationality}', '${occupation}', '${emergencyPhone}',
+            '${refferdBy}', '${doctor}',
+            '${healthProblem ? 1 : 0}', '${bloodPresure ? 1 : 0}', '${allergyProblems ? 1 : 0}', '${thyroidProblems ? 1 : 0}',
+            '${asthama ? 1 : 0}', '${anyOther}', '${medication}', '${pregnant ? 1 : 0}', '${painScale}', '${initialStatement}',
+            '${passportNo}', '${emiratesNo}'
+        );`;
+
+        console.log("Executing Edit Query:", updatePatientQuery);
+        await ExecuteSPAsync(updatePatientQuery);
+
+        res.status(200).send(true);
+    } catch (err) {
+        console.log(err);
         res.status(500).send(err);
     }
 });
@@ -290,17 +320,15 @@ app.get('/api/ConsentFormsSigned', async (req, res) => {
 app.put('/api/doctor/deletedoctor/:id', async (req,res)=>{
     let doctorId = req.params.id;
     try{
-        let query = `UPDATE Doctor SET IsActive = 0 WHERE Id = ${doctorId} `;
+        let query = `UPDATE Doctor SET isactive = 0 WHERE ID = ${doctorId} `;
         let result = await ExecuteQueryAsync(query);
         console.log("deletedoctorapi error",result)
-        console.log("datat arhaa hai ",result)
         res.status(200).json(result);
     }
     catch (err) {
         console.log("delete doctor api error",err)
     }
 })
-
 
 // console.log("DB Result:", user);  // Check what data is coming from DB
 // console.log("Hashed Password:", user.Password); // Check password field
