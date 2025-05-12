@@ -9,6 +9,7 @@ import AddDoctor from './pages/doctor/add';
 import Docters from './pages/doctor/doctor';
 import Appointments from './pages/appointments';
 import ScheduleDetails from './pages/schedule';
+import EditPatient from './pages/patients/patientEdit';
 
 function App() {
   const [mainpage, setMainpage] = useState('');
@@ -33,6 +34,7 @@ function App() {
           <Route path="/dashboard" element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}>
             <Route path="form" element={<Forms />} />
             <Route path="patients" element={<Patients />} />
+            <Route path="edit-patient" element={<EditPatient />} />
             <Route path="addDoctor" element={<AddDoctor />} />
             <Route path="doctors" element={<Docters />} />
           </Route>

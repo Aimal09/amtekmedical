@@ -17,6 +17,19 @@ export default function Docters() {
         fetchData();
     }, []);
 
+    const handleDelete = async (doctorId) => {
+        try {
+            await CallApi(`doctor/deletedoctor/${doctorId}`, 'PUT');
+            alert('Doctor deactivated successfully');
+            // 🔄 Refresh doctor list after deactivation
+            const updatedData = await CallApi('GetAllDoctor');
+            setDoctorList(updatedData);
+            setFilteredDoctorList(updatedData);
+        } catch (error) {
+            console.error('Failed to deactivate doctor', error);
+            alert('Failed to deactivate doctor');
+        }
+    };
     const search = (e) => {
         const value = e.target.value.toLowerCase();
         setSearchValue(value);
@@ -32,6 +45,7 @@ export default function Docters() {
         }
     };
 
+
     return (
         <>
             <div className="d-flex justify-content-between">
@@ -42,15 +56,16 @@ export default function Docters() {
 
                 <table>
                     <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Contact</th>
-                            <th>Avaialable Days</th>
-                            <th>Avaialable Hours</th>
-                            <th>exceptional Dates</th>
-                            <th>Department OF Doctor</th>
-                        </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Available Days</th>
+                        <th>Available Hours</th>
+                        <th>Exceptional Dates</th>
+                        <th>Department Of Doctor</th>
+                        <th>Action</th> {/* 🔥 New column */}
+                    </tr>
                     </thead>
                     <tbody>
                         {filteredDoctorList.map((row, index) => (
@@ -62,6 +77,7 @@ export default function Docters() {
                                 <td>{row.AvailableHours}</td>
                                 <td>{row.ExceptionalDates}</td>
                                 <td>{row.departmentOfDoctor}</td>
+                                <td> <button onClick={()=>handleDelete(row.id)} > Delete Doctor </button> </td>
                             </tr>
                         ))}
                     </tbody>

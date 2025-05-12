@@ -18,7 +18,7 @@ export default function Appointments() {
     const [patients, setPatients] = useState();
     const [doctorId, setDoctorId] = useState();
     const [patientId, setPatientId] = useState();
-    const [appointmentDate, setAppointmentDate] = useState('2024-08-12');
+    const [appointmentDate, setAppointmentDate] = useState(`${(new Date()).getFullYear()}/${(new Date()).getMonth() + 1}/${(new Date()).getDate()}`);
     const [startTime, setStartTime] = useState(moment().format('HH:00'));
     const [endTime, setEndTime] = useState(moment().add(1, 'hours').format('HH:00'));
     const [errorMsg, setErrorMsg] = useState();
@@ -126,7 +126,7 @@ export default function Appointments() {
                         </div>
                         <div className="form-group d-flex flex-column">
                             <label>date</label>
-                            <DatePicker inputClass="form-control" value={appointmentDate} onChange={(e) => setAppointmentDate(moment(e.toDate()).format('YYYY-MM-DD'))} />
+                            <DatePicker minDate={`${(new Date()).getFullYear()}/${(new Date()).getMonth() + 1}/${(new Date()).getDate()}`} inputClass="form-control" value={appointmentDate} onChange={(e) => setAppointmentDate(moment(e.toDate()).format('YYYY-MM-DD'))} />
                         </div>
                         <div className="d-flex">
                             <div className="form-group d-flex flex-column w-100 mr-1">

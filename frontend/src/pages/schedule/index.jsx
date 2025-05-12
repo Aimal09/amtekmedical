@@ -6,13 +6,16 @@ import CallApi from "../../callApi";
 import SlideIn from "../../components/slidein";
 import SignaturePad from "../../components/signaturePad/signaturePad";
 import ConsentButton from "./slideinButoons";
+import ComboBox from "../../components/combobox";
+import { Button } from "bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ScheduleDetails = () => {
   const { search } = useLocation();
   const [query] = useSearchParams(search);
   const [appoinmentId, setAppoinmentId] = useState(query.get("id"));
   const [appoinment, setAppoinment] = useState({});
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(`${(new Date()).getFullYear()}-${((new Date()).getMonth() + 1).toString().padStart(2,'0')}-${((new Date()).getDate()).toString().padStart(2,'0')}`);
   const [amount, setAmount] = useState("");
   const [selectedVisit, setSelectedVisit] = useState(false);
   const [description, setDescription] = useState("");
@@ -27,7 +30,15 @@ const ScheduleDetails = () => {
   const [showButtons, setShowButtons] = useState(true);
   const [selectedConsent, setSelectedConsent] = useState(null);
   const [forms, setForms] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);   // jis record ko dekhna hai
+  const [showModal, setShowModal] = useState(false);
   // const [formId, setFormId] = useState([]);
+
+  const navigate = useNavigate();
+
+  const backCalender = ()=>{
+    navigate("/calendar")
+  }
 
   let[conseltantform,setConseltantform] = useState([]);
 
@@ -83,7 +94,7 @@ const ScheduleDetails = () => {
       amount,
       appointmentId: appoinmentId,
       prescription: description,
-      doctorDiagnosis: doctorDiagnosis,
+      doctorDiagnosis: doctorDiagnosis.label,
     };
     console.log("Payload being sent:", payload);
     try {
@@ -96,6 +107,7 @@ const ScheduleDetails = () => {
     setAmount("");
     setDescription("");
     setDoctorDiagnosis("");
+    alert("successfully submited")
   };
 
   const handleButtonClick1 = (text) => {
@@ -188,6 +200,10 @@ const ScheduleDetails = () => {
   //   onClick(finalText);
   // };
   
+  const handleView = (row) => {
+    setSelectedRow(row);   // pura object store kar lo
+    setShowModal(true);    // modal khol do
+  };
 
   return (
     <div className="container mt-4">
@@ -216,8 +232,47 @@ const ScheduleDetails = () => {
             <p className="fs-5">
               <strong>Passport No:</strong> {appoinment.PassportNo}
             </p>
+            <p className="fs-5">
+            <strong>Email:</strong> {appoinment.Email}
+            </p>
+            <p className="fs-5">
+            <strong>Occupation:</strong> {appoinment.Occupation}
+            </p>
+            <p className="fs-5">
+            <strong>Emergency Phone:</strong> {appoinment.EmergencyPhone}
+            </p>
+            <p className="fs-5">
+            <strong>RefferedBy:</strong> {appoinment.RefferedBy}
+            </p>
+            <p className="fs-5">
+              <strong>HealthProblem :</strong> {appoinment.healthProblem ? 'Yes' : 'No'}
+            </p>
+            <p className="fs-5">
+            <strong>BloodPresure:</strong> {appoinment.bloodPresure ? 'Yes' : 'No'}
+            </p>
+            <p className="fs-5">
+            <strong>AllergyProblems:</strong> {appoinment.allergyProblems ? 'Yes' : 'No'}
+            </p>
+            <p className="fs-5">
+            <strong>ThyroidProblems:</strong> {appoinment.thyroidProblems ? 'Yes' : 'No'}
+            </p>
+            <p className="fs-5">
+            <strong>Asthama:</strong> {appoinment.asthama ? 'Yes' : 'No'}
+            </p>
+            <p className="fs-5">
+            <strong>Pregnant:</strong> {appoinment.pregnant ? 'Yes' : 'No'}
+            </p>
+            <p className="fs-5">
+            <strong>PainScale:</strong> {appoinment.PainScale}
+            </p>
+            <p className="fs-5">
+            <strong>InitialStatement:</strong> {appoinment.InitialStatement}
+            </p>
+            <p className="fs-5">
+            <strong>DoctorName:</strong> {appoinment.DoctorName}
+            </p>
           </div>
-
+          
           <div className="col-md-8">
             <div className="p-3 slide-in-container">
               <h5>Doctor Form</h5>
@@ -227,8 +282,7 @@ const ScheduleDetails = () => {
                   <input
                     type="date"
                     value={date || ""}
-                    disabled={disable}
-                    onChange={(e) => setDate(e.target.value)}
+                    disabled={true}
                   />
                 </div>
                 <div className="input-with-label col-md-6">
@@ -253,20 +307,10 @@ const ScheduleDetails = () => {
                 />
               </div>
               <div className="mt-3">
-                <label htmlFor="dropdown">Doctor Diagnosis</label>
-                <select
-                  className="form-control"
-                  value={doctorDiagnosis}
-                  disabled={disable}
-                  onChange={(e) => setDoctorDiagnosis(e.target.value)}
-                >
-                  <option value="">-- Select Diagnosis --</option>
-                  {diagnosisOptions.map((option) => (
-                    <option key={option.Id} value={option.Title}>
-                      {option.Title}
-                    </option>
-                  ))}
-                </select>
+                <label htmlFor="dropdown"> Select Diagnosis</label>
+
+                <ComboBox data={diagnosisOptions.map(d => ({value:d.Id, label:d.Title}))} onSelect={setDoctorDiagnosis}/>
+                
               </div>
               <button
                 type="button"
@@ -331,7 +375,13 @@ const ScheduleDetails = () => {
                     </>
                   )}
                 </div>
+
               </SlideIn>
+              <button
+              onClick={backCalender}
+              type="button"
+                className="butn-sec mt-4 mr-4"
+              >back</button>
               {/* mai yahan ek button chahta hn jis k click pey slide in khul ja  */}
             </div>
             {!disable && (
@@ -356,6 +406,7 @@ const ScheduleDetails = () => {
                 <th>Prescription</th>
                 <th>Doctor Diagnosis</th>
                 <th>Amount</th>
+                <th>View</th>
               </tr>
             </thead>
             <tbody>
@@ -366,16 +417,63 @@ const ScheduleDetails = () => {
                     <td>{app.AppointmentDate}</td>
                     <td>{app.PatientName}</td>
                     <td>{app.Prescription}</td>
-                    <td>{app.DoctorDiagnosis || "N/A"}</td>
+                    <td>{app.doctorDiagnosis || "N/A"}</td>
                     <td>{app.Amount}</td>
+                    <td>
+                  <a
+                    style={{ cursor: "pointer", color: "blue" }}
+                    onClick={() => handleView(app)}
+                  >
+                    view
+                  </a>
+                </td>
+                
                   </tr>
                 ))}
             </tbody>
           </table>
+          {showModal && selectedVisit && (
+  <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Visit Details</h5>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setShowModal(false)}
+          />
+        </div>
+        <div className="modal-body">
+          <p><strong>Date of Visit:</strong> {selectedVisit.CreatedOn}</p>
+          <p><strong>Appointment Date:</strong> {selectedVisit.AppointmentDate}</p>
+          <p><strong>Patient Name:</strong> {selectedVisit.PatientName}</p>
+          <p><strong>Prescription:</strong> {selectedVisit.Prescription}</p>
+          <p><strong>Doctor Diagnosis:</strong> {selectedVisit.doctorDiagnosis}</p>
+          <p><strong>Amount:</strong> {selectedVisit.Amount}</p>
+        </div>
+        <div className="modal-footer">
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowModal(false)}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
         </div>
       </div>
     </div>
   );
+  
 };
 
+
+
+
 export default ScheduleDetails;
+
