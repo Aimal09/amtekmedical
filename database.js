@@ -8,7 +8,7 @@ const env = process.env;
 function ConnectSql() {
     let con = mysql.createConnection({
         host: env.HOST,
-        user: env.USER,
+        user: env.USERNAME,
         password: env.PASSWORD,
         database: env.DATABASE
     });
@@ -55,9 +55,10 @@ async function ExecutePostAndGet(updateQuery, newIdQuery) {
 function ExecuteSPAsync(sql) {
     return new Promise((resolve, reject) => {
         const connectedCon = ConnectSql();
-        console.log(  "connected k bad tak cahl rha hai ya nhi data ")
+        console.log(  "connected ")
         connectedCon.query(sql, (err, result) => {
             if (err) {
+                console.log("\n\n\n\n\n\n\n\n",err)
                 connectedCon.end();
                 return reject(err);
             }

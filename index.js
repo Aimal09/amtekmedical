@@ -287,6 +287,21 @@ app.get('/api/ConsentFormsSigned', async (req, res) => {
     }
 });
 
+app.put('/api/doctor/deletedoctor/:id', async (req,res)=>{
+    let doctorId = req.params.id;
+    try{
+        let query = `UPDATE Doctor SET IsActive = 0 WHERE Id = ${doctorId} `;
+        let result = await ExecuteQueryAsync(query);
+        console.log("deletedoctorapi error",result)
+        console.log("datat arhaa hai ",result)
+        res.status(200).json(result);
+    }
+    catch (err) {
+        console.log("delete doctor api error",err)
+    }
+})
+
+
 // console.log("DB Result:", user);  // Check what data is coming from DB
 // console.log("Hashed Password:", user.Password); // Check password field
 // console.log("Entered Password:", req.body.password); // Check entered password
