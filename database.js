@@ -6,9 +6,10 @@ const env = process.env;
 // let con;
 
 function ConnectSql() {
+    console.log(`\n\n\n${env.USER}\n\n\n\n`)
     let con = mysql.createConnection({
         host: env.HOST,
-        user: env.USERNAME,
+        user: env.USER,
         password: env.PASSWORD,
         database: env.DATABASE
     });
