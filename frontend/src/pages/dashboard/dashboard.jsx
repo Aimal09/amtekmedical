@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import './dashboard.css';
 import logo from '../../assets/images/amtekmedicallogo.png'
-// import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 
