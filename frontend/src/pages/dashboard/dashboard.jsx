@@ -18,6 +18,7 @@ function Dashboard() {
                     <li><NavLink to="/calendar" className={({ isActive }) => (isActive ? "active" : "")}><i className="fa-solid fa-calendar"></i> Calendar</NavLink></li>
                     <li><NavLink to="addDoctor" className={({ isActive }) => (isActive ? "active" : "")}><i className="fa-solid fa-user-plus"></i> Add Doctor</NavLink></li>
                     <li><NavLink to="doctors" className={({ isActive }) => (isActive ? "active" : "")}><i className="fa-solid fa-user-doctor"></i> Doctor List</NavLink></li>
+                    <li><NavLink to="doctorClients" className={({ isActive }) => (isActive ? "active" : "")}><i className="fa-solid fa-user-doctor"></i> Doctor Clients List</NavLink></li>
                 </ul>
             </aside>
 

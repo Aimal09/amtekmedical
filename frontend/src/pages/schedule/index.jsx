@@ -217,6 +217,10 @@ const ScheduleDetails = () => {
     setShowModal(true); // modal khol do
   };
 
+  const editfucntion = (patient)=>{
+    navigate("/dashboard/edit-patient",{ state: { patientData: patient } });
+  }
+
   return (
     <div className="container mt-4">
       <div className="card p-4 shadow-lg">
@@ -247,6 +251,9 @@ const ScheduleDetails = () => {
             <p className="fs-5">
               <strong>Email:</strong> {appoinment.Email}
             </p>
+             <p className="fs-5">
+              <strong>Residence Address:</strong> {appoinment.residenceAddress}
+            </p>
             <p className="fs-5">
               <strong>Occupation:</strong> {appoinment.Occupation}
             </p>
@@ -276,6 +283,13 @@ const ScheduleDetails = () => {
               <strong>Asthama:</strong> {appoinment.asthama ? "Yes" : "No"}
             </p>
             <p className="fs-5">
+              <strong>Bleeding Disorder:</strong>{" "}
+              {appoinment.bleedingDisorder ? "Yes" : "No"}
+            </p>
+            <p className="fs-5">
+              <strong>Diabetic:</strong> {appoinment.diabetic ? "Yes" : "No"}
+            </p>
+            <p className="fs-5">
               <strong>Pregnant:</strong> {appoinment.pregnant ? "Yes" : "No"}
             </p>
             <p className="fs-5">
@@ -287,6 +301,14 @@ const ScheduleDetails = () => {
             <p className="fs-5">
               <strong>DoctorName:</strong> {appoinment.DoctorName}
             </p>
+            <button
+                          type="button"
+                          className="butn"
+                          onClick={ ()=>editfucntion(appoinment) }
+                          // disabled={!isSigned}
+                        >
+                          Edit Patient
+                        </button>
           </div>
 
           <div className="col-md-8">

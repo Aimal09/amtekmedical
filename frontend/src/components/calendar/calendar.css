@@ -39,7 +39,7 @@
     position: relative;
 }
 .day.cal-col>div:not(:nth-of-type(1)) p:not(:empty){
-    background: var(--primary);
+    background-color: var(--primary);
     color: var(--hv-text);
     position: absolute;
     top: var(--value);

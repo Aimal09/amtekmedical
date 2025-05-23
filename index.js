@@ -35,7 +35,7 @@ app.post('/login', async (req, res) => {
     }
     
     const token = jwt.sign({user}, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const userData = {role: user["Role"], firstName: user["FirstName"], lastName: user["LastName"]}
+    const userData = {id: user["Id"], role: user["Role"], firstName: user["FirstName"], lastName: user["LastName"]}
     res.send({ token, userData });
 });
 
@@ -64,7 +64,7 @@ app.post('/api/AddFormEntry', authMiddleware, async (req, res) => {
         name, age, regno, contact, email, nationality, occupation, emergencyPhone,
         refferdBy, doctor, healthProblem, bloodPresure, allergyProblems, thyroidProblems,
         asthama, anyOther, medication, pregnant, painScale, initialStatement,
-        passportNo, emiratesNo, signImg // ✅ Added signImg here
+        passportNo, emiratesNo, signImg,residenceAddress ,bleedingDisorder,diabetic// ✅ Added signImg here
     } = req.body;
 
     console.log("Received PainScale:", req.body.painScale);
@@ -88,7 +88,8 @@ app.post('/api/AddFormEntry', authMiddleware, async (req, res) => {
             '${refferdBy}', '${doctor}', '${newId}', '${req.user['BranchId']}',
             '${healthProblem ? 1 : 0}', '${bloodPresure ? 1 : 0}', '${allergyProblems ? 1 : 0}', '${thyroidProblems ? 1 : 0}',
             '${asthama ? 1 : 0}', '${anyOther}', '${medication}', '${pregnant ? 1 : 0}', '${painScale}', '${initialStatement}',
-            '${passportNo}', '${emiratesNo}', '${signImg}'
+            '${passportNo}', '${emiratesNo}', '${signImg}','${residenceAddress}',
+            '${bleedingDisorder ? 1 : 0}', '${diabetic ? 1 : 0}'
         );`;
 
         console.log("Executing Query:", patientQuery);
