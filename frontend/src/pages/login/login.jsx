@@ -8,7 +8,7 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:3001/login", {
+    const response = await fetch("http://89.116.228.152:3001/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
