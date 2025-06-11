@@ -9,7 +9,7 @@ function ConnectSql() {
     console.log(`\n\n\n${env.USER}\n\n\n\n`)
     let con = mysql.createConnection({
         host: env.HOST,
-        user: env.USER,
+        user: env.USERNAME,
         password: env.PASSWORD,
         database: env.DATABASE
     });

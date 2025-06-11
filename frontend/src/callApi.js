@@ -3,6 +3,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL
 const CallApi = async (endpoint, callType = 'GET', data = null, resultAsText = false) => {
     try {
         let url = `${BASE_URL}/${endpoint}`;
+        console.log('API URL:', url);
         const token = localStorage.getItem('token');
         
         const headers = {
