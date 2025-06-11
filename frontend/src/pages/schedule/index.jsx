@@ -225,7 +225,7 @@ const ScheduleDetails = () => {
     <div className="container mt-4">
       <div className="card p-4 shadow-lg">
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-4" style={{ maxHeight: "500px", overflowY: "auto" }}>
             <h5 className="mb-3">Patient Details</h5>
             <p className="fs-5">
               <strong>Name:</strong> {appoinment.Name}

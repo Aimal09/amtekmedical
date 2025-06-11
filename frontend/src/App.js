@@ -11,6 +11,7 @@ import Appointments from './pages/appointments';
 import ScheduleDetails from './pages/schedule';
 import EditPatient from './pages/patients/patientEdit';
 import DoctorClients from './pages/doctorClients/doctorClients';
+import DoctorClientsById from './pages/doctorClients/doctorClientsById';
 
 function App() {
   const [mainpage, setMainpage] = useState('');
@@ -71,6 +72,23 @@ function App() {
         : <Login />
     }
   />
+  <Route
+  path="/doctorClientsById"
+  element={
+    isAuthenticated()
+      ? <DoctorClientsById />
+      : <Navigate to="/login" />
+  }
+ 
+/>
+  <Route
+  path="/edit-patient"
+  element={
+    isAuthenticated()
+      ? <EditPatient />
+      : <Navigate to="/login" />
+  }
+/>
 
   {/* 👨‍⚕️ 👩‍💼 👨‍💼 All Authenticated Roles can see Calendar */}
   <Route
@@ -89,7 +107,16 @@ function App() {
       : <Navigate to="/login" />
   }
 />
+ <Route
+  path="/schedule"
+  element={
+    isAuthenticated()
+      ? <ScheduleDetails />
+      : <Navigate to="/login" />
+  }
+/>
 
+/schedule
   {/* 🧑‍💼 Admin / Receptionist Dashboard + Routes */}
   {isAuthenticated() && getRole() !== 3 && (
     <>

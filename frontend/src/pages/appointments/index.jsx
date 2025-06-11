@@ -239,7 +239,12 @@ export default function Appointments() {
             onChange={(e) => handleWeekChange(e.target.value)}
           />
         </div>
-
+        <div>
+             <button className="butn" onClick={() => window.location.href = "/doctorClientsById"}>
+              <i className="fa fa-users pr-3"></i>
+              View clients
+            </button>
+        </div>
         {localStorage.getItem("role") !== "3" && (
           <>
             <button className="butn" onClick={() => setPopup(true)}>
