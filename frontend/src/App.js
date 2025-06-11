@@ -10,6 +10,7 @@ import Docters from './pages/doctor/doctor';
 import Appointments from './pages/appointments';
 import ScheduleDetails from './pages/schedule';
 import EditPatient from './pages/patients/patientEdit';
+import DoctorClients from './pages/doctorClients/doctorClients';
 
 function App() {
   const [mainpage, setMainpage] = useState('');
@@ -21,16 +22,19 @@ function App() {
     }
     return !!localStorage.getItem('token');
   };
+  const getRole = () => {
+  return parseInt(localStorage.getItem('role'));
+};
 
   return (
     <div className="App">
     <Router>
       <div className="App">
-        <Routes>
+        {/* <Routes>
           <Route path="/" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
           <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
           
-          {/* 🟢 Dashboard Routes */}
+          
           <Route path="/dashboard" element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}>
             <Route path="form" element={<Forms />} />
             <Route path="patients" element={<Patients />} />
@@ -39,12 +43,84 @@ function App() {
             <Route path="doctors" element={<Docters />} />
           </Route>
   
-          {/* 🟢 Move Schedule Route OUTSIDE Dashboard */}
+          
           <Route path="/schedule" element={<ScheduleDetails />} /> 
   
-          {/* 🟢 Other Routes */}
+         
           <Route path="/calendar" element={<Appointments />} />
-        </Routes>
+        </Routes> */}
+     <Routes>
+  {/* 🔐 Login Routes */}
+  <Route
+    path="/"
+    element={
+      isAuthenticated()
+        ? getRole() === 3
+          ? <Navigate to="/calendar" />
+          : <Navigate to="/dashboard" />
+        : <Login />
+    }
+  />
+  <Route
+    path="/login"
+    element={
+      isAuthenticated()
+        ? getRole() === 3
+          ? <Navigate to="/calendar" />
+          : <Navigate to="/dashboard" />
+        : <Login />
+    }
+  />
+
+  {/* 👨‍⚕️ 👩‍💼 👨‍💼 All Authenticated Roles can see Calendar */}
+  <Route
+    path="/calendar"
+    element={
+      isAuthenticated()
+        ? <Appointments />
+        : <Navigate to="/login" />
+    }
+  />
+  <Route
+  path="/doctorClients"
+  element={
+    isAuthenticated()
+      ? <DoctorClients />
+      : <Navigate to="/login" />
+  }
+/>
+
+  {/* 🧑‍💼 Admin / Receptionist Dashboard + Routes */}
+  {isAuthenticated() && getRole() !== 3 && (
+    <>
+      <Route path="/dashboard" element={<Dashboard />}>
+        <Route path="form" element={<Forms />} />
+        <Route path="patients" element={<Patients />} />
+        <Route path="edit-patient" element={<EditPatient />} />
+        <Route path="addDoctor" element={<AddDoctor />} />
+        <Route path="doctors" element={<Docters />} />
+        <Route path="doctorClients" element={<DoctorClients />} />
+      </Route>
+
+      {/* Optional: Schedule Route */}
+      <Route path="/schedule" element={<ScheduleDetails />} />
+    </>
+  )}
+
+  {/* 🌐 Catch-All Redirect */}
+  <Route
+    path="*"
+    element={
+      isAuthenticated()
+        ? getRole() === 3
+          ? <Navigate to="/calendar" />
+          : <Navigate to="/dashboard" />
+        : <Navigate to="/login" />
+    }
+  />
+</Routes>
+
+
       </div>
     </Router>
   </div>
